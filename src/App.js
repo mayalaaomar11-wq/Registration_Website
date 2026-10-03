@@ -32,6 +32,7 @@ function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [showSupportBox, setShowSupportBox] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -43,10 +44,61 @@ function App() {
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted Data:", formData);
-    setIsSubmitted(true);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const n = (v) => (v && v.trim() ? v.trim() : null);
+    const key = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_SUPABASE_URL}/rest/v1/registrations`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: key,
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify({
+            full_name: formData.fullName.trim(),
+            phone: formData.phone.trim(),
+            email: formData.email.trim().toLowerCase(),
+            whatsapp_bot_pin: n(formData.whatsappBotPin),
+            has_student_activity: formData.hasStudentActivity,
+            previous_chapter: n(formData.previousChapter),
+            previous_position: n(formData.previousPosition),
+            why_join: formData.whyJoin,
+            what_to_gain: formData.whatToGain,
+            how_you_know_us: formData.howYouKnowUs,
+            first_committee: formData.firstCommittee,
+            second_committee: n(formData.secondCommittee),
+            why_this_committee: formData.whyThisCommittee,
+            university: formData.university,
+            faculty: formData.faculty,
+            department: n(formData.department),
+            academic_year: formData.academicYear,
+            facebook: n(formData.facebook),
+            linkedin: n(formData.linkedin),
+          }),
+        }
+      );
+
+      if (res.status === 409) {
+        alert('This email is already registered.');
+      } else if (!res.ok) {
+        throw new Error(await res.text());
+      } else {
+        setIsSubmitted(true);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong, please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -92,7 +144,6 @@ function App() {
               className="text-green-400 font-bold hover:underline block pt-0.5">+201069842136</a>
           </div>
         )}
-
         <div className="relative flex items-center justify-center">
           <div className="absolute w-12 h-12 bg-green-500 rounded-full animate-ping opacity-30"></div>
           <button
@@ -104,7 +155,6 @@ function App() {
           </button>
         </div>
       </div>
-
     </div>
   );
 }
