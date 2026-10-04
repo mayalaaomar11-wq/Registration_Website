@@ -151,15 +151,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-red-50/20 text-slate-800 flex flex-col justify-between items-center font-['Cairo',sans-serif] p-4 md:p-8 relative overflow-hidden" dir="ltr">
+    <div className="min-h-screen bg-cream font-sans text-navy flex flex-col" dir="ltr">
 
-      <div className="absolute top-10 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[130px] pointer-events-none"></div>
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-[130px] pointer-events-none"></div>
+      <header className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy to-navy-600 px-4 pt-8 pb-28 rounded-b-[2.5rem]">
+        <div className="absolute -top-16 -right-16 w-64 h-64 bg-copper/25 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-20 -left-16 w-64 h-64 bg-copper/15 rounded-full blur-3xl pointer-events-none"></div>
+        <Header />
+      </header>
 
-      <div className="bg-white/95 backdrop-blur-2xl border border-blue-900/10 p-6 md:p-10 rounded-3xl shadow-2xl shadow-slate-200 w-full max-w-3xl relative z-10 my-auto">
-        {!isSubmitted ? (
-          <>
-            <Header />
+      <main className="relative z-10 w-full max-w-2xl mx-auto px-4 -mt-20 flex-1">
+        <div className="bg-cream-50 border border-copper/30 rounded-3xl shadow-xl shadow-navy/10 p-5 sm:p-8">
+          {!isSubmitted ? (
             <RegisterForm
               formData={formData}
               handleChange={handleChange}
@@ -167,36 +169,35 @@ function App() {
               currentStep={currentStep}
               nextStep={nextStep}
               prevStep={prevStep}
+              isSubmitting={isSubmitting}
             />
-          </>
-        ) : (
-          <SuccessScreen onReset={handleReset} />
-        )}
-      </div>
+          ) : (
+            <SuccessScreen onReset={handleReset} />
+          )}
+        </div>
+      </main>
 
       <Footer />
 
-      <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3 pointer-events-auto">
+      <div className="fixed bottom-4 right-4 z-50 flex items-end gap-3">
         {showSupportBox && (
-          <div className="bg-slate-900/95 backdrop-blur-md border border-green-500/30 text-white p-4 rounded-2xl shadow-2xl max-w-xs text-xs space-y-1 relative animate-fadeIn">
-            <p className="text-slate-300">
-              Having a <a href="https://wa.me/201069842136" target="_blank" rel="noopener noreferrer" className="text-green-400 font-semibold hover:underline">technical problem</a>?
+          <div className="bg-navy text-cream border border-copper/50 p-4 rounded-2xl shadow-2xl max-w-xs text-xs space-y-1 animate-fadeIn">
+            <p className="text-cream/80">
+              Having a <a href="https://wa.me/201069842136" target="_blank" rel="noopener noreferrer" className="text-copper-light font-semibold hover:underline">technical problem</a>?
             </p>
-            <p className="text-slate-300">Contact me on WhatsApp:</p>
+            <p className="text-cream/80">Contact me on WhatsApp:</p>
             <a href="https://wa.me/201069842136" target="_blank" rel="noopener noreferrer"
-              className="text-green-400 font-bold hover:underline block pt-0.5">+201069842136</a>
+              className="text-copper-light font-bold hover:underline block pt-0.5">+201069842136</a>
           </div>
         )}
-        <div className="relative flex items-center justify-center">
-          <div className="absolute w-12 h-12 bg-green-500 rounded-full animate-ping opacity-30"></div>
-          <button
-            onClick={() => setShowSupportBox(!showSupportBox)}
-            className="w-14 h-14 bg-gradient-to-tr from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-green-500/40 border border-green-400/30 transition-all duration-300 transform hover:scale-105 cursor-pointer"
-            title="Toggle Support"
-          >
-            <FaWhatsapp className="w-7 h-7" />
-          </button>
-        </div>
+        <button
+          onClick={() => setShowSupportBox(!showSupportBox)}
+          className="w-12 h-12 bg-navy hover:bg-navy-700 rounded-full flex items-center justify-center text-copper-light shadow-xl shadow-navy/40 border border-copper/50 transition-all cursor-pointer"
+          title="Toggle Support"
+          aria-label="Toggle Support"
+        >
+          <FaWhatsapp className="w-6 h-6" />
+        </button>
       </div>
     </div>
   );
